@@ -1,13 +1,29 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Navigator from './Navigator/Navigator';
+
+import Mode from './Screens/Mode';
+import ScanQr from './Screens/ScanQr';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+  <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Mode}
+          options={{ title: 'Pointage' }}
+        />
+        <Stack.Screen name="Scan" component={ScanQr} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
