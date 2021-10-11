@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import CryptoJS from "react-native-crypto-js"
 import {decode as atob, encode as btoa} from 'base-64'
+import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ScanQr({navigation, route }) {
 
@@ -17,30 +19,40 @@ export default function ScanQr({navigation, route }) {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     console.log("data ffff : " , data);
-    var key = '6AhFLqwlExB9tn2Twql62EtbFDqBEv+S7tXW3h6a/0o=';
+    const array_info = data.split('#1AZE?');
+    console.log("console array : ", array_info);
+    let fd = new FormData();
+    fd.append('unix',array_info[0]);
+    fd.append('site',array_info[1]);
+    fd.append('type',route.params.Type);
+    fd.append('user_id',await AsyncStorage.getItem("id_user"));
+    axios.post('http://192.168.0.130:8000/api/pointage',fd)
+    .then((data)=>{
+        console.log("data : " ,data.data );
+    });
+    // var key = '6AhFLqwlExB9tn2Twql62EtbFDqBEv+S7tXW3h6a/0o=';
     
-    let  encrypted = atob(data);
+    // let  encrypted = atob(data);
     
-      encrypted = JSON.parse(encrypted);
+    //   encrypted = JSON.parse(encrypted);
       
-    const iv = CryptoJS.enc.Base64.parse(encrypted.iv);
+    // const iv = CryptoJS.enc.Base64.parse(encrypted.iv);
     
-    const value = encrypted.value;
+    // const value = encrypted.value;
     
-    key = CryptoJS.enc.Base64.parse(key);
+    // key = CryptoJS.enc.Base64.parse(key);
     
-    var decrypted = CryptoJS.AES.decrypt(value, key, {
-        iv: iv
-      });
+    // var decrypted = CryptoJS.AES.decrypt(value, key, {
+    //     iv: iv
+    //   });
       
-    decrypted = decrypted.toString(CryptoJS.enc.Utf8);
+    // decrypted = decrypted.toString(CryptoJS.enc.Utf8);
     
-    console.log("data test decrypted:" ,decrypted);
+    // console.log("data test decrypted:" ,decrypted);
   };
 
   if (hasPermission === null) {

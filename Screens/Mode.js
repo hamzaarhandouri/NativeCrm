@@ -2,6 +2,12 @@ import React from 'react'
 import { View, Text  ,TouchableOpacity , StyleSheet} from 'react-native'
 
 export default function Mode({ navigation }) {
+    useEffect(() => {
+        effect
+        return () => {
+            cleanup
+        }
+    }, [input])
     return (
         <View style={styles.container}>
            <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() =>{navigation.navigate('Scan', {Type:"Entrer"})}} >

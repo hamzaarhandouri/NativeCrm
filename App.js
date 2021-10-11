@@ -5,6 +5,7 @@ import Navigator from './Navigator/Navigator';
 
 import Mode from './Screens/Mode';
 import ScanQr from './Screens/ScanQr';
+import Login from './Screens/Login';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -16,6 +17,11 @@ export default function App() {
   return (
   <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: 'Login' }}
+        />
         <Stack.Screen
           name="Home"
           component={Mode}

@@ -8,9 +8,11 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.9",
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/native-stack": "^6.2.2",
     "@react-navigation/stack": "^6.0.9",
+    "axios": "^0.22.0",
     "base-64": "^1.0.0",
     "crypto-js": "^4.1.1",
     "expo": "~42.0.1",
