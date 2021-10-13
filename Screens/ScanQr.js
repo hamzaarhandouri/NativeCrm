@@ -19,7 +19,7 @@ export default function ScanQr({navigation, route }) {
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data , navigation}) => {
     
     setScanned(true);
     console.log("data ffff : " , data);
@@ -32,7 +32,9 @@ export default function ScanQr({navigation, route }) {
     fd.append('user_id',await AsyncStorage.getItem("id_user"));
     axios.post('http://192.168.0.130:8000/api/pointage',fd)
     .then((data)=>{
-        console.log("data : " ,data.data );
+      
+      navigation.navigate("Home");
+      
     });
     // var key = '6AhFLqwlExB9tn2Twql62EtbFDqBEv+S7tXW3h6a/0o=';
     

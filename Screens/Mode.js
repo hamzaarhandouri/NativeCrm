@@ -1,21 +1,88 @@
-import React from 'react'
+import React , {useEffect,useState} from 'react'
 import { View, Text  ,TouchableOpacity , StyleSheet} from 'react-native'
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment'
 
 export default function Mode({ navigation }) {
-    useEffect(() => {
-        effect
-        return () => {
-            cleanup
+
+    const [Entrer , setEntrer] = useState(0);
+    const [Sorite, setSortie] = useState(0);
+    const [Unix, setUnix] = useState(null);
+    const [Type, setType] = useState(null)
+    const [Site, setSite] = useState(null);
+    const [Time, setTime] = useState(null)
+    const [Data, setData] = useState(null);
+
+
+  useEffect(() => {
+    
+
+      async function get()  {
+        let id = await AsyncStorage.getItem("id_user");
+  
+      axios.get(`http://192.168.0.130:8000/api/check/${id}`)
+      .then( (data)=>{
+        if(data.data.Type  === "Entrer")
+        {
+          const date =  moment.unix(parseInt(data.data.QR_Unix_Time)).format("DD/MM/YYYY");
+          const time =  moment.unix(parseInt(data.data.QR_Unix_Time)).format("HH:mm:ss");
+
+          setUnix(date);
+          setTime(time);
+          setSite(data.data.Site_pointage);
+          setType(data.data.Type);
+          setEntrer(1);
         }
-    }, [input])
+        else if (data.data.Type  === "Sortie")
+        {
+          const date =  moment.unix(parseInt(data.data.QR_Unix_Time)).format("DD/MM/YYYY");
+          const time =  moment.unix(parseInt(data.data.QR_Unix_Time)).format("HH:mm:ss");
+
+          setUnix(date);
+          setTime(time);
+          setSite(data.data.Site_pointage);
+          setType(data.data.Type);
+          setSortie(1);
+        }
+  
+    })
+    .catch((error)=>{
+        console.log("error hh !");
+        console.log("data : ",error.response.data);
+        console.log("status : ",error.response.status);
+        console.log("headers : ",error.response.headers);
+        console.log("message : ",error.message);
+          alert(error);
+       });    
+        
+         
+      
+    }
+
+    get();
+  }, [])
+
+
+    
+
     return (
         <View style={styles.container}>
-           <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() =>{navigation.navigate('Scan', {Type:"Entrer"})}} >
-              <Text style={styles.loginText}>Pointage Entrée</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() =>{navigation.navigate('Scan', {Type:"Sortie"})}}>
-              <Text style={styles.loginText}>Pointage Sortie</Text>
-            </TouchableOpacity>
+        <View  >
+            <Text style={styles.btnText}> Votre dernier pointage a été effectué en {Type} sur le site {Site} le {Unix} à {Time}</Text>
+        </View>
+
+          {
+            Entrer === 0 ? (<TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() =>{navigation.navigate('Scan', {Type:"Entrer"})}} >
+            <Text style={styles.loginText}>Pointage Entrée</Text>
+          </TouchableOpacity>) : null
+          }
+           {
+             Sorite === 0 ? ( <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={() =>{navigation.navigate('Scan', {Type:"Sortie"})}}>
+             <Text style={styles.loginText}>Pointage Sortie</Text>
+           </TouchableOpacity>) :null
+           }
+           
         </View>
     )
 }
@@ -97,7 +164,7 @@ const styles = StyleSheet.create({
     },
 
     btnText:{
-      color:"white",
+      color:"black",
       fontWeight:'bold'
     }
   });
